@@ -26,7 +26,7 @@ public class T {
             }
 
             if (count == 5) {  // 当count == 5 时，synchronized代码块会抛出异常
-                int i = 1 / 0; 
+                int i = 1 / 0;
             }
         }
     }
@@ -39,7 +39,7 @@ public class T {
                 t.m();
             }
         };
-        new Thread(r, "t1").start(); // 执行到第5秒时，抛出 ArithmeticException 
+        new Thread(r, "t1").start(); // 执行到第5秒时，抛出 ArithmeticException
         // 如果抛出异常后，t2 会继续执行，就代表t2拿到了锁，即t1在抛出异常后释放了锁
         
         try {

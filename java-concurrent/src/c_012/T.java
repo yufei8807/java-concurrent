@@ -1,5 +1,7 @@
 package c_012;
 
+import com.sun.org.apache.bcel.internal.generic.FALOAD;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,24 +17,24 @@ import java.util.concurrent.TimeUnit;
  * 当线程t1开始运行的时候，会把running值从内存中读到t1线程的工作区，在运行过程中直接使用这个copy，并不会每次都会去读取堆内存，
  * 这样，当主线程修改running的值之后，t1线程感知不到，所以不会停止运行
  * 
- * 使用volatile，将会强制所有线程都去堆内存中读取running的值
+ * 使用volatile，当running发生改变时，通知所有线程都去堆内存中读取running的值
  * 
- * 
+ * volatile只保证了可见性，不保证原子性，不能替代synchronized
  */
 public class T {
 
-    /*volatile*/ boolean running = true;   // 对比有无volatile的情况下，整个程序运行结果的区别
+    volatile boolean running = true;   // 对比有无volatile的情况下，整个程序运行结果的区别
     
     void m() {
         System.out.println(" m start ");
         while (running) { // 直到主线程将running设置为false，T线程才会退出
             // 在while中加入一些语句，可见性问题可能就会消失，这是因为加入语句后，CPU可能就会出现空闲，然后就会同步主内存中的内容到工作内存
             // 所以，可见性问题可能会消失
-            /*try {
-                TimeUnit.MILLISECONDS.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
+//            try {
+//                TimeUnit.SECONDS.sleep(3);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         System.out.println(" m end ");
     }
@@ -46,7 +48,7 @@ public class T {
             e.printStackTrace();
         }
 
-        t.running = true;
+        t.running = false;
     }
 
 }

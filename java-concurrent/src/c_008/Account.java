@@ -1,5 +1,6 @@
 package c_008;
 
+import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,15 +29,21 @@ public class Account {
             e.printStackTrace();
         }
         this.balance = balance;
+        System.out.println("ok");
     }
 
-    public /*synchronized*/ double getBalance() {
+    public synchronized double getBalance() {
         return this.balance;
     }
 
     public static void main(String[] args) {
         Account a = new Account();
         new Thread(() -> a.set("张三", 100.0)).start();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(a.getBalance()); // 0.0 
         try {
             TimeUnit.SECONDS.sleep(3);
